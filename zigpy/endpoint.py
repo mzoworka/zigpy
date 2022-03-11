@@ -209,9 +209,10 @@ class Endpoint(zigpy.util.LocalLogMixin, zigpy.util.ListenableMixin):
     ) -> tuple[ZCLHeader, CommandSchema]:
         """Deserialize data for ZCL"""
         if cluster_id not in self.in_clusters and cluster_id not in self.out_clusters:
-            raise KeyError(f"No cluster ID 0x{cluster_id:04x} on {self.unique_id}")
-
-        cluster = self.in_clusters.get(cluster_id, self.out_clusters.get(cluster_id))
+            #raise KeyError("No cluster ID 0x%04x on %s" % (cluster_id, self.unique_id))
+            cluster = zigpy.zcl.Cluster.from_id(self, cluster_id, is_server=True)
+        else:
+            cluster = self.in_clusters.get(cluster_id, self.out_clusters.get(cluster_id))
         return cluster.deserialize(data)
 
     def handle_message(

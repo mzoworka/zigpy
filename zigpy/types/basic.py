@@ -727,7 +727,7 @@ class LVBytes(bytes):
         num_bytes = int.from_bytes(data[: cls._prefix_length], "little")
 
         if len(data) < cls._prefix_length + num_bytes:
-            raise ValueError("Data is too short")
+            num_bytes = len(data)-cls._prefix_length
 
         s = data[cls._prefix_length : cls._prefix_length + num_bytes]
 
@@ -940,7 +940,7 @@ class CharacterString(str):
         length = int.from_bytes(data[: cls._prefix_length], "little")
 
         if len(data) < cls._prefix_length + length:
-            raise ValueError("Data is too short")
+            length = len(data)-cls._prefix_length
 
         raw = data[cls._prefix_length : cls._prefix_length + length]
         text = raw.split(b"\x00")[0].decode("utf8", errors="replace")
