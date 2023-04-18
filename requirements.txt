@@ -1,0 +1,4 @@
+aiosqlite
+crccheck
+cryptography
+voluptuous
