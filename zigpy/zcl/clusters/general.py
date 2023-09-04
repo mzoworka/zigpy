@@ -2192,7 +2192,7 @@ class Ota(Cluster):
         elif cmd_name == "upgrade_end":
             await self._handle_upgrade_end(*args, tsn=tsn)
         else:
-            self.debug(
+            self.warning(
                 "no '%s' OTA command handler for '%s %s': %s",
                 cmd_name,
                 self.endpoint.manufacturer,
@@ -2253,12 +2253,21 @@ class Ota(Cluster):
                     img.header.image_size,
                     tsn=tsn,
                 )
-                return
         else:
             self.debug("No OTA image is available")
-        await self.query_next_image_response(
-            foundation.Status.NO_IMAGE_AVAILABLE, tsn=tsn
-        )
+            await self.query_next_image_response(
+                foundation.Status.NO_IMAGE_AVAILABLE, tsn=tsn
+            )
+        self.endpoint.device.application.listener_event("on_ota_handle_query_next_image", 
+            self.endpoint.manufacturer,
+            self.endpoint.model,
+            field_ctrl,
+            manufacturer_id,
+            image_type,
+            current_file_version,
+            hardware_version,
+            model,
+            img,)
 
     async def _handle_image_block(
         self,
