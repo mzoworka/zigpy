@@ -2,3 +2,5 @@ aiosqlite
 crccheck
 cryptography
 voluptuous
+pyserial-asyncio
+
